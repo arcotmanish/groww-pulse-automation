@@ -1,0 +1,50 @@
+name: Groww Weekly Pulse Pipeline
+
+on:
+  workflow_dispatch:  # Allows manual triggering
+  schedule:
+    # Runs at 2:30 AM UTC, which corresponds to 8:00 AM IST (UTC+5:30)
+    # This runs every Monday (Day 1 of the week)
+    - cron: '30 2 * * 1'
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      # Phase 1: Automated Ingestion
+      - name: Run Phase 1 (Scraping)
+        run: |
+          pip install -r phase1_ingestion/requirements.txt
+          python phase1_ingestion/scraper.py
+
+      # Phase 2: Local Vector Embeddings & Clustering
+      - name: Run Phase 2 (Clustering)
+        run: |
+          pip install -r phase2_clustering/requirements.txt
+          python phase2_clustering/cluster.py
+
+      # Phase 3: LLM Synthesis & Deep PII Validation
+      - name: Run Phase 3 (Synthesis)
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          pip install -r phase3_synthesis/requirements.txt
+          python phase3_synthesis/synthesize.py
+
+      # Phase 4: Output Integration (MCP)
+      - name: Run Phase 4 (Output Integration)
+        env:
+          GOOGLE_DOC_ID: ${{ secrets.GOOGLE_DOC_ID }}
+          DRAFT_EMAIL_TO: ${{ secrets.DRAFT_EMAIL_TO }}
+          RAILWAY_API_BASE: ${{ secrets.RAILWAY_API_BASE }}
+        run: |
+          python phase4_output/mcp_integration.py
