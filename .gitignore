@@ -1,3 +1,6 @@
 phase3_synthesis/.env
 __pycache__/
 venv/
+phase1_ingestion/output/
+phase2_clustering/output/
+phase3_synthesis/output/
