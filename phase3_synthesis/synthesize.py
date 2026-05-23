@@ -51,21 +51,35 @@ TASK:
 Identify the 3 strongest meaningful themes from these clusters.
 If fewer than 3 distinct themes are present, derive sub-themes from the strongest cluster without hallucinating unrelated issues.
 
-Output EXACTLY in this format:
+Output EXACTLY in this clean formatting:
 
-## Top 3 Themes
-- [Theme Name]: [1 sentence explaining the specific issue and its business impact]
-- [Theme Name]: [1 sentence explaining the specific issue and its business impact]
-- [Theme Name]: [1 sentence explaining the specific issue and its business impact]
+Top 3 Themes
+---
 
-## Voice of the User
-- "[Exact verbatim quote from the reviews above]"
-- "[Exact verbatim quote from the reviews above]"
+- **[Theme Name]**: [1 sentence explaining the specific issue and its business impact]
+
+- **[Theme Name]**: [1 sentence explaining the specific issue and its business impact]
+
+- **[Theme Name]**: [1 sentence explaining the specific issue and its business impact]
+
+
+Voice of the User
+---
+
 - "[Exact verbatim quote from the reviews above]"
 
-## Recommended Actions
+- "[Exact verbatim quote from the reviews above]"
+
+- "[Exact verbatim quote from the reviews above]"
+
+
+Recommended Actions
+---
+
 - [Concrete operational action directly tied to Theme 1]
+
 - [Concrete operational action directly tied to Theme 2]
+
 - [Concrete operational action directly tied to Theme 3]
 
 QUOTE SELECTION RULES:
@@ -105,6 +119,13 @@ def deep_pii_validation(synthesis_text):
     If you see ANY contextual PII (like someone accidentally typing their PAN, email, phone number, address, or internal user ID within a sentence), replace it with [REDACTED]. 
     Do NOT change the meaning or any other words.
     If no PII is present, return the text exactly as it was.
+    
+    STRICT OUTPUT RULES:
+    * Return ONLY the final cleaned report text
+    * Do NOT explain findings
+    * Do NOT summarize validation results
+    * Do NOT add commentary or analysis
+    * Preserve the exact formatting and structure of the original report
     
     TEXT:
     {synthesis_text}
