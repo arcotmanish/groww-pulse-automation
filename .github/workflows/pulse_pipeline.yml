@@ -23,6 +23,7 @@ jobs:
       # Phase 1: Automated Ingestion
       - name: Run Phase 1 (Scraping)
         run: |
+          pip install "app-store-scraper==0.3.5" --no-deps
           pip install -r phase1_ingestion/requirements.txt
           python phase1_ingestion/scraper.py
 
